@@ -1,6 +1,6 @@
-#include <test.h>
+#include <main/output.h>
 
 int main(void) {
-    print_int(42);
+    LOG_FATAL("TEST MESSAGE: %f", 3.14f);
     return 0;
 }
