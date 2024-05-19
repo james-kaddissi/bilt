@@ -1,6 +1,7 @@
 #include <main/output.h>
+#include <main/assertions.h>
 
 int main(void) {
-    LOG_FATAL("TEST MESSAGE: %f", 3.14f);
+    BILT_ASSERT(1==1);
     return 0;
 }

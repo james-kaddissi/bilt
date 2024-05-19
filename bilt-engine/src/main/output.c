@@ -1,4 +1,5 @@
 #include "output.h"
+#include "assertions.h"
 
 // necessary imports for output
 #include <stdio.h>
@@ -14,7 +15,7 @@ void stop_log() {
 };
 
 // log output function with variable arguments
-BILT_API void log_output(log_level level, const char* message, ...){
+void log_output(log_level level, const char* message, ...){
     const char* prefixes[6] = {"(FATAL) -> ", "(ERROR) -> ", "(WARN) -> ", "(INFO) -> ", "(DEBUG) -> ", "(TRACE) -> "};
     // b8 err = level <= 1; // determine if the log level jis an error or fatal
     
@@ -29,3 +30,7 @@ BILT_API void log_output(log_level level, const char* message, ...){
     sprintf(final_output, "%s%s\n", prefixes[level], output); // concatenate output and prefix and stores back in final_output
     printf("%s", final_output); // print final output
 };
+
+void assertion_failure(const char* expression, const char* message, const char* file, i32 line) {
+    log_output(LOG_LEVEL_FATAL, "Assertion Failure -> %s, message: '%s', in file: %s, on line: %d\n", expression, message, file, line); // pass assertion failures to logger with variable arguments
+}
