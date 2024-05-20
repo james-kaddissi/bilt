@@ -1,10 +1,9 @@
 /*
- * This header file defines functions used in the platform-specific code.
- * In combination with the platform-specific code in this directory, 
- * it allows us to abstract away platform-specific details and use 
- * universal functionality in our engine.
+This header file defines functions used in the platform-specific code.
+In combination with the platform-specific code in this directory, 
+it allows us to abstract away platform-specific details and use 
+universal functionality in our engine.
  */
-
 #pragma once
 
 #include "defines.h"
