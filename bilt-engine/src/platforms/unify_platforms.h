@@ -46,10 +46,10 @@ void* copy_mem(void* dest, const void* source, u64 size);
 void* set_mem(void* dest, i32 value, u64 size);
 
 // writes a message to the console with the specified color.
-void write_console(const char* message, u8 colour);
+void write_console(const char* message, u8 color);
 
 // writes an error message to the console with the specified color.
-void write_console_error(const char* message, u8 colour);
+void write_console_error(const char* message, u8 color);
 
 // gets the current time.
 f64 get_time();
