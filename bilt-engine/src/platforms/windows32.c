@@ -86,6 +86,7 @@ b8 initialize_platform(active_platform* active_plat, const char* name, i32 x, i3
     LARGE_INTEGER hz;
     QueryPerformanceFrequency(&hz); // gets clock speed of CPU
     clock_speed = 1.0 / (f64)hz.QuadPart;
+    QueryPerformanceCounter(&start_time);
 
     return TRUE; // successful platform initialization
 }
