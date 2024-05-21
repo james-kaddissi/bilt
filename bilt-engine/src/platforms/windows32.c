@@ -1,6 +1,8 @@
 #include "platforms/unify_platforms.h"
-#include "main/output.h"
+
 #if PLATFORM_WINDOWS_32
+
+#include "main/output.h"
 
 #include <windows.h>
 #include <windowsx.h>
