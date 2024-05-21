@@ -14,7 +14,7 @@ typedef struct active_platform {
 } active_platform;
 
 //initializes the platform with the given parameters.
-BILT_API b8 initialize_platform(
+b8 initialize_platform(
     active_platform* active_plat, // plaform struct
     const char* name, // platform name
     i32 x, // x-coordinate for initialization.
@@ -25,16 +25,16 @@ BILT_API b8 initialize_platform(
 
 
 // deactivates the specified platform.
-BILT_API void deactivate_platform(active_platform* active_plat);
+void deactivate_platform(active_platform* active_plat);
 
 // processes the message loop for the specified platform.
-BILT_API b8 message_loop(active_platform* active_plat);
+b8 message_loop(active_platform* active_plat);
 
 // allocates memory of the specified size.
-void* mem_alloc(u64 size, b8 aligned);
+BILT_API void* mem_alloc(u64 size, b8 aligned);
 
 // frees the specified memory block.
-void free_mem(void* block, b8 aligned);
+BILT_API void free_mem(void* block, b8 aligned);
 
 // sets the specified memory block to zero.
 void* zero_mem(void* block, u64 size);
