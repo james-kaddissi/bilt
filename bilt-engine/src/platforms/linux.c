@@ -81,7 +81,7 @@ b8 initialize_platform(active_platform* active_plat, const char* name, i32 x, i3
 
     i32 result = xcb_flush(state->connection);
     if (result <= 0) {
-        KFATAL("An error occurred while flushing: %d", result);
+        LOG_FATAL("An error occurred while flushing: %d", result);
         return FALSE;
     }
 
@@ -169,10 +169,10 @@ void write_console_error(const char* message, u8 color) {
     printf("\033[%sm%s\033[0m", color_strings[color], message);
 }
 
-f64 platform_get_absolute_time() {
+f64 platform_get_azbsolute_time() {
     struct timespec curr;
     clock_gettime(CLOCK_MONOTONIC, &curr);
-    return curr.tv_sec + now.tv_nsec * 0.000000001;
+    return curr.tv_sec + curr.tv_nsec * 0.000000001;
 }
 
 void timed_sleep(u64 ms) {
