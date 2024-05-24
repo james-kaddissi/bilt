@@ -3,6 +3,7 @@
 #include "output.h"
 #include "platforms/unify_platforms.h"
 #include "bilt_memory.h"
+#include "signals.h"
 
 // holds information on the running state of the application
 typedef struct appState {
@@ -29,6 +30,11 @@ b8 initialize_application(gameObject* game) {
 
     as.isAlive = TRUE;
     as.isTerminated = FALSE;
+    //initialize signals
+    if(!enable_signals()) {
+        LOG_ERROR("Signal system failed enabling. Failed to continue.");
+        return FALSE;
+    }
     // initialize platform
     if(!initialize_platform(&as.active_plat, game->init.name, game->init.initPosX, game->init.initPosY, game->init.initWidth, game->init.initHeight)) {
         return FALSE;
@@ -68,6 +74,7 @@ b8 run_application() {
     }
     as.isAlive = FALSE;
     // deactivate platform
+    disable_signals();
     deactivate_platform(&as.active_plat);
     return TRUE;
 }

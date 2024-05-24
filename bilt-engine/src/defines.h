@@ -87,3 +87,6 @@ STATIC_ASSERT(sizeof(f64) == 8, "Expected f64 to be 8 bytes.");
 #define GB 1073741824
 #define MB 1048576 
 #define KB 1024
+
+// max amount of signal ids, both engine and custom
+#define MAX_IDS 4096
