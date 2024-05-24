@@ -31,10 +31,10 @@ void deactivate_platform(active_platform* active_plat);
 b8 message_loop(active_platform* active_plat);
 
 // allocates memory of the specified size.
-BILT_API void* mem_alloc(u64 size, b8 aligned);
+void* mem_alloc(u64 size, b8 aligned);
 
 // frees the specified memory block.
-BILT_API void free_mem(void* block, b8 aligned);
+void free_mem(void* block, b8 aligned);
 
 // sets the specified memory block to zero.
 void* zero_mem(void* block, u64 size);

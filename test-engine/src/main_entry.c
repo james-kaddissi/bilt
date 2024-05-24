@@ -1,6 +1,6 @@
 #include "game.h"
 #include <main_entry.h>
-#include <platforms/unify_platforms.h>
+#include <main/bilt_memory.h>
 
 b8 initializeGame(gameObject* gameRes) {
     gameRes->init.initPosX = 100;
@@ -12,6 +12,6 @@ b8 initializeGame(gameObject* gameRes) {
     gameRes->render = gameRender;
     gameRes->initialize = gameInitialize;
     gameRes->onResize = gameOnResize;
-    gameRes->state = mem_alloc(sizeof(gameState), FALSE);
+    gameRes->state = mallocate(sizeof(gameState), MEM_TYPE_GAME);
     return TRUE;
 }

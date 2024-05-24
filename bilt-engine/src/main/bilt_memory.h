@@ -1,3 +1,8 @@
+/*
+This header file contains the definitions for memory types and functions used by the game layer
+*/
+
+
 #pragma once
 
 #include "defines.h"
@@ -31,12 +36,14 @@ typedef enum mem_type {
     MAX_MEM
 } mem_type;
 
-void enable_memory();
-void disable_memory();
+BILT_API void enable_memory();
+BILT_API void disable_memory();
 
 // memory functions API
 BILT_API void* mallocate(u64 size, mem_type type);
 BILT_API void mfree(void* block, u64 size, mem_type type);
 BILT_API void* mzero(void* block, u64 size);
-BILT_API void* mcopy(void* block, u64 size);
+BILT_API void* mcopy(void* block, const void* source, u64 size);
 BILT_API void* mset(void* dest, i32 value, u64 size);
+// debug functions
+BILT_API char* get_total_mallocation(); 

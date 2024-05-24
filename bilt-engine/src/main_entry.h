@@ -3,10 +3,13 @@
 #include "main/app.h"
 #include "main/output.h"
 #include "game_object.h"
+#include "main/bilt_memory.h"
 
 extern b8 initializeGame(gameObject* gameRes);
 
 int main(void) {
+    enable_memory();
+    
     gameObject game;
     if(!initializeGame(&game)) {
         LOG_FATAL("Game initialization failed!");
@@ -28,5 +31,6 @@ int main(void) {
         return 2;
     }
 
+    disable_memory();
     return 0;
 }

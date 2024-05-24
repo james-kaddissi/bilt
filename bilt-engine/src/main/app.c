@@ -2,6 +2,7 @@
 #include "game_object.h"
 #include "output.h"
 #include "platforms/unify_platforms.h"
+#include "bilt_memory.h"
 
 // holds information on the running state of the application
 typedef struct appState {
@@ -45,6 +46,7 @@ b8 initialize_application(gameObject* game) {
 }
 
 b8 run_application() {
+    LOG_INFO(get_total_mallocation());
     // main application loop
     while(as.isAlive) {
         if(!message_loop(&as.active_plat)) {

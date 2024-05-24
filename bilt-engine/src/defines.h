@@ -82,3 +82,8 @@ STATIC_ASSERT(sizeof(f64) == 8, "Expected f64 to be 8 bytes.");
 #define BILT_API
 #endif
 #endif
+
+// constants for bytes in the following larger sizes
+#define GB 1073741824
+#define MB 1048576 
+#define KB 1024
