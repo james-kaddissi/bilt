@@ -4,6 +4,7 @@
 #include "platforms/unify_platforms.h"
 #include "bilt_memory.h"
 #include "signals.h"
+#include "main/inputs.h"
 
 // holds information on the running state of the application
 typedef struct appState {
@@ -27,6 +28,7 @@ b8 initialize_application(gameObject* game) {
     }
     as.game = game;
     start_log();
+    enable_inputs();
 
     as.isAlive = TRUE;
     as.isTerminated = FALSE;
@@ -70,11 +72,14 @@ b8 run_application() {
                 as.isAlive = FALSE;
                 break;
             }
+
+            update_inputs(0);
         }
     }
     as.isAlive = FALSE;
     // deactivate platform
     disable_signals();
+    disable_inputs();
     deactivate_platform(&as.active_plat);
     return TRUE;
 }
