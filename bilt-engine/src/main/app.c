@@ -20,6 +20,9 @@ typedef struct appState {
 static b8 hasInit = FALSE;
 static appState as;
 
+b8 on_signal(u16 id, void* singer, void* listener, signal sig);
+b8 on_key(u16 id, void* singer, void* listener, signal sig);
+
 b8 initialize_application(gameObject* game) {
     // initialize backend
     if(hasInit){
@@ -37,6 +40,9 @@ b8 initialize_application(gameObject* game) {
         LOG_ERROR("Signal system failed enabling. Failed to continue.");
         return FALSE;
     }
+    listen_for(APP_QUIT, 0, on_signal);
+    listen_for(KEY_PRESSED, 0, on_key);
+    listen_for(KEY_RELEASED, 0, on_key);
     // initialize platform
     if(!initialize_platform(&as.active_plat, game->init.name, game->init.initPosX, game->init.initPosY, game->init.initWidth, game->init.initHeight)) {
         return FALSE;
@@ -78,8 +84,40 @@ b8 run_application() {
     }
     as.isAlive = FALSE;
     // deactivate platform
+    unlisten_for(APP_QUIT, 0, on_signal);
+    listen_for(KEY_PRESSED, 0, on_signal);
+    listen_for(KEY_RELEASED, 0, on_signal);
     disable_signals();
     disable_inputs();
     deactivate_platform(&as.active_plat);
     return TRUE;
+}
+b8 on_signal(u16 id, void* singer, void* listener, signal sig) {
+    switch (id) {
+        case APP_QUIT: {
+            LOG_INFO("APP_QUIT recieved, shutting down.\n");
+            as.isAlive = FALSE;
+            return TRUE;
+        }
+    }
+
+    return FALSE;
+}
+
+b8 on_key(u16 id, void* singer, void* listener, signal sig) {
+    if (id == KEY_PRESSED) {
+        u16 key_code = sig.data.u16[0];
+        if (key_code == KEY_ESCAPE) {
+            signal data = {};
+            sing_signal(APP_QUIT, 0, data);
+
+            return TRUE;
+        } else {
+            LOG_DEBUG("'%c' key pressed in window.", key_code);
+        }
+    } else if (id == KEY_RELEASED) {
+        u16 key_code = sig.data.u16[0];
+        LOG_DEBUG("'%c' key released in window.", key_code);
+    }
+    return FALSE;
 }

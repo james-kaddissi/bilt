@@ -3,6 +3,7 @@
 #if PLATFORM_WINDOWS_32
 
 #include "main/output.h"
+#include "main/inputs.h"
 
 #include <windows.h>
 #include <windowsx.h>
@@ -191,13 +192,21 @@ LRESULT CALLBACK win_popups(HWND hwnd, u32 msg, WPARAM wparam, LPARAM lparam) {
         case WM_SYSKEYDOWN:
         case WM_KEYUP:
         case WM_SYSKEYUP: {
-            // process inputs 
+            b8 pressState = (msg == WM_KEYDOWN || msg == WM_SYSKEYDOWN);
+            keys key = (u16)wparam;
+            process_key_input(key, pressState);
         } break;
         case WM_MOUSEMOVE: {
-            // process mouse inputs
+            i32 x = GET_X_LPARAM(lparam);
+            i32 y = GET_Y_LPARAM(lparam);
+            process_mouse_movement(x, y);
         } break;
         case WM_MOUSEWHEEL: {
-            // process mouse scrolling
+            i32 delta = GET_WHEEL_DELTA_WPARAM(wparam);
+            if (delta != 0) {
+                delta = (delta < 0) ? -1: 1;
+                process_mouse_scroll(delta);
+            }
         } break;
         case WM_LBUTTONDOWN:
         case WM_MBUTTONDOWN:
@@ -205,7 +214,25 @@ LRESULT CALLBACK win_popups(HWND hwnd, u32 msg, WPARAM wparam, LPARAM lparam) {
         case WM_LBUTTONUP:
         case WM_MBUTTONUP:
         case WM_RBUTTONUP: {
-            // process mouse clicks
+            b8 pressState = msg == WM_LBUTTONDOWN || msg == WM_RBUTTONDOWN || msg == WM_MBUTTONDOWN;
+            mouse_buttons button = NUM_BUTTONS;
+            switch (msg) {
+                case WM_LBUTTONDOWN:
+                case WM_LBUTTONUP:
+                    button = LEFT_BUTTON;
+                    break;
+                case WM_MBUTTONDOWN:
+                case WM_MBUTTONUP:
+                    button = MIDDLE_BUTTON;
+                    break;
+                case WM_RBUTTONDOWN:
+                case WM_RBUTTONUP:
+                    button = RIGHT_BUTTON;
+                    break;
+            }
+            if (button != NUM_BUTTONS) {
+                process_button_input(button, pressState);
+            }
         } break;
     }
     return DefWindowProcA(hwnd, msg, wparam, lparam);

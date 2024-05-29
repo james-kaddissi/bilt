@@ -47,7 +47,7 @@ void process_key_input(keys key, b8 pressState) {
     }
 }
 
-void process_mouse_input(mouse_buttons button, b8 pressState) {
+void process_button_input(mouse_buttons button, b8 pressState) {
     if(state.currentMouseState.mouse_buttons[button] != pressState) {
         state.currentMouseState.mouse_buttons[button] = pressState;
 
@@ -57,8 +57,11 @@ void process_mouse_input(mouse_buttons button, b8 pressState) {
     }
 }
 
+
+
 void process_mouse_movement(i16 x, i16 y) {
     if(state.currentMouseState.x != x || state.currentMouseState.y != y) {
+        LOG_DEBUG("Mouse position: (%i, %i)", x, y);
         state.currentMouseState.x = x;
         state.currentMouseState.y = y;
 
