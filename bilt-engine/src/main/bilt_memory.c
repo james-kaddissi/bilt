@@ -2,6 +2,7 @@
 
 #include "output.h"
 #include "platforms/unify_platforms.h"
+#include "dsa/bilt_string.h"
 
 #include <string.h>
 #include <stdio.h>
@@ -105,6 +106,6 @@ char* get_total_mallocation() {
 
         len += snprintf(msg + len, size, " %s: %.2f%s\n", mem_types_strings[i], amt, q);
     }
-    char* result = _strdup(msg);
+    char* result = strDupe(msg);
     return result;
 }
