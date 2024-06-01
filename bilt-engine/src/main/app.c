@@ -7,6 +7,8 @@
 
 #include "platforms/unify_platforms.h"
 
+#include "renderer/frontend.h"
+
 #include "game_object.h"
 
 // holds information on the running state of the application
@@ -49,6 +51,12 @@ b8 initialize_application(gameObject* game) {
     listen_for(KEY_RELEASED, 0, on_key);
     // initialize platform
     if(!initialize_platform(&as.active_plat, game->init.name, game->init.initPosX, game->init.initPosY, game->init.initWidth, game->init.initHeight)) {
+        return FALSE;
+    }
+
+    // initialize renderer
+    if(!enable_renderer(game->init.name, &as.active_plat)) {
+        LOG_FATAL("Renderer failed to initialize.");
         return FALSE;
     }
 
@@ -97,6 +105,10 @@ b8 run_application() {
                 as.isAlive = FALSE;
                 break;
             }
+            frame_data fdata;
+            fdata.delta_time = delta_time;
+            generate_frame(&fdata);
+
             // clock cycle cleanup
             f64 end_frame_time = get_time();
             f64 frame_delta = end_frame_time - frame_time;
@@ -122,6 +134,7 @@ b8 run_application() {
     listen_for(KEY_RELEASED, 0, on_signal);
     disable_signals();
     disable_inputs();
+    disable_renderer();
     deactivate_platform(&as.active_plat);
     return TRUE;
 }
