@@ -1,10 +1,13 @@
-#include "app.h"
-#include "game_object.h"
-#include "output.h"
-#include "platforms/unify_platforms.h"
-#include "bilt_memory.h"
-#include "signals.h"
+#include "main/app.h"
+#include "main/output.h"
+#include "main/bilt_memory.h"
+#include "main/signals.h"
 #include "main/inputs.h"
+#include "main/clock_cycle.h"
+
+#include "platforms/unify_platforms.h"
+
+#include "game_object.h"
 
 // holds information on the running state of the application
 typedef struct appState {
@@ -14,7 +17,8 @@ typedef struct appState {
     active_platform active_plat;
     i16 width;
     i16 height;
-    f64 prevStep;
+    clock clock;
+    f64 prev_time;
 } appState;
 
 static b8 hasInit = FALSE;
@@ -60,6 +64,15 @@ b8 initialize_application(gameObject* game) {
 }
 
 b8 run_application() {
+    // initialize application clock
+    start_clock(&as.clock);
+    update_clock(&as.clock);
+    as.prev_time = as.clock.running_duration;
+    f64 app_elapsed_time = 0;
+    u8 frames = 0;
+    f64 target_fps = 1.0f/60;
+
+
     LOG_INFO(get_total_mallocation());
     // main application loop
     while(as.isAlive) {
@@ -68,18 +81,38 @@ b8 run_application() {
         }
         // update and render game if not terminated
         if(!as.isTerminated) {
-            if(!as.game->update(as.game, (f32)0)) {
+            // update clock cycle
+            update_clock(&as.clock);
+            f64 curr_time = as.clock.running_duration;
+            f64 delta_time = curr_time - as.prev_time;
+            f64 frame_time = get_time();
+
+            if(!as.game->update(as.game, (f32)delta_time)) {
                 LOG_FATAL("Update sequence failed. Terminating process.");
                 as.isAlive = FALSE;
                 break;
             }
-            if(!as.game->render(as.game, (f32)0)) {
+            if(!as.game->render(as.game, (f32)delta_time)) {
                 LOG_FATAL("Renderer failed. Terminating process.");
                 as.isAlive = FALSE;
                 break;
             }
+            // clock cycle cleanup
+            f64 end_frame_time = get_time();
+            f64 frame_delta = end_frame_time - frame_time;
+            app_elapsed_time += frame_delta;
+            f64 leftover_time = target_fps - frame_delta;
+            if(leftover_time > 0) {
+                u64 ltime = leftover_time * 1000;
+                b8 smoothing = FALSE; // if true then every frame takes no quicker than the target fps, by sleeping the rest of the duration
+                if (ltime > 0 && smoothing) {
+                    timed_sleep(ltime-1);
+                }
+                frames++;
+            }
 
-            update_inputs(0);
+            update_inputs(delta_time);
+            as.prev_time = curr_time;
         }
     }
     as.isAlive = FALSE;
