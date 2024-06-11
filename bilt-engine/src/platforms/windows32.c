@@ -4,6 +4,7 @@
 
 #include "main/output.h"
 #include "main/inputs.h"
+#include "dsa/bilt_array.h"
 
 #include <windows.h>
 #include <windowsx.h>
@@ -174,6 +175,10 @@ f64 get_time() {
 // sleep
 void timed_sleep(u64 ms) {
     Sleep(ms);
+}
+
+void get_extensions(const char ***names) {
+    push_array(*names, &"VK_KHR_win32_surface");
 }
 
 LRESULT CALLBACK win_popups(HWND hwnd, u32 msg, WPARAM wparam, LPARAM lparam) {

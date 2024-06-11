@@ -6,6 +6,7 @@
 #include "main/output.h"
 #include "main/signals.h"
 #include "main/inputs.h"
+#include "dsa/bilt_array.h"
 
 #include <xcb/xcb.h>
 #include <X11/keysym.h>
@@ -215,6 +216,10 @@ void timed_sleep(u64 ms) {
     }
     usleep((ms % 1000) * 1000);
 #endif
+}
+
+void get_extensions(const char ***names) {
+    push_array(*names, &"VK_KHR_xcb_surface");
 }
 
 
