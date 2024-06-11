@@ -13,3 +13,7 @@ char* strDupe(const char* str) {
     mcopy(copy, str, length + 1);
     return copy;
 }
+
+b8 strEq(const char* str1, const char* str2) {
+    return strcmp(str1, str2) == 0;
+}
