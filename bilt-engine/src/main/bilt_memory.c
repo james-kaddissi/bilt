@@ -1,6 +1,5 @@
-#include "bilt_memory.h"
-
-#include "output.h"
+#include "main/bilt_memory.h"
+#include "main/output.h"
 #include "platforms/unify_platforms.h"
 #include "dsa/bilt_string.h"
 

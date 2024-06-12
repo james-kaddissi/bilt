@@ -1,7 +1,7 @@
-#include "signals.h"
-#include "bilt_memory.h"
+#include "main/signals.h"
+#include "main/bilt_memory.h"
 #include "dsa/bilt_array.h"
-#include "output.h"
+#include "main/output.h"
 
 #include "defines.h"
 

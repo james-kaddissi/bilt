@@ -1,5 +1,5 @@
-#include "output.h"
-#include "assertions.h"
+#include "main/output.h"
+#include "main/assertions.h"
 #include "platforms/unify_platforms.h"
 
 // necessary imports for output
