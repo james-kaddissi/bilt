@@ -9,7 +9,7 @@
 
 static vk_context vk;
 
-VKAPI_ATTR VKBool32 VKAPI_CALL vk_debug(VkDebugUtilsMessageSeverityFlagBitsEXT message_severity, VkDebugUtilsMessageTypeFlagsEXT message_type, const VkDebugUtilsMessengerCallbackDataEXT* callback_data, void* data);
+VKAPI_ATTR VkBool32 VKAPI_CALL vk_debug(VkDebugUtilsMessageSeverityFlagBitsEXT message_severity, VkDebugUtilsMessageTypeFlagsEXT message_type, const VkDebugUtilsMessengerCallbackDataEXT* callback_data, void* data);
 
 b8 initialize_vulkan_api(backend_context* context, const char* name, struct active_platform* active_plat) {
     vk.vk_allocator = 0;
@@ -30,7 +30,7 @@ b8 initialize_vulkan_api(backend_context* context, const char* name, struct acti
     push_array(extensions, &VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
     LOG_DEBUG("Required vulkan extensions: ");
     for (u32 i = 0; i < get_array_length(extensions); ++i) {
-        LOG_DEBUG(extensions[i];)
+        LOG_DEBUG(extensions[i]);
     }
     #endif
     vk_create_info.enabledExtensionCount = get_array_length(extensions);
@@ -73,7 +73,7 @@ b8 initialize_vulkan_api(backend_context* context, const char* name, struct acti
     PFN_vkCreateDebugUtilsMessengerEXT func = (PFN_vkCreateDebugUtilsMessengerEXT)vkGetInstanceProcAddr(vk.vk_instance, "vkCreateDebugUtilsMessengerEXT");
     BILT_ASSERT_MESSAGE(func, "Failed to create debug messenger!");
     VK_CHECK(func(vk.vk_instance, &debug_create_info, vk.vk_allocator, &vk.vk_debugger));
-    KDEBUG("Vulkan debugger created.");
+    LOG_DEBUG("Vulkan debugger created.");
     #endif
     LOG_INFO("Vulkan initialized.")
     return TRUE;

@@ -14,7 +14,7 @@ typedef struct vk_context {
     VkInstance vk_instance;
     VkAllocationCallbacks* vk_allocator;
     #if defined(_DEBUG)
-    VkdebugUtilsMessengerEXT vk_debugger;
+    VkDebugUtilsMessengerEXT vk_debugger;
     #endif
 } vk_context;
 
