@@ -1,6 +1,7 @@
 #include "renderer/vulkan/vulkan_api.h"
 #include "renderer/vulkan/vulkan_platforms.h"
 #include "renderer/vulkan/vulkan_defines.inl"
+#include "renderer/vulkan/vulkan_device.h"
 
 #include "main/output.h"
 #include "dsa/bilt_string.h"
@@ -63,7 +64,7 @@ b8 initialize_vulkan_api(backend_context* context, const char* name, struct acti
     vk_create_info.ppEnabledLayerNames = validNames;
     VK_CHECK(vkCreateInstance(&vk_create_info, vk.vk_allocator, &vk.vk_instance));
     LOG_INFO("Vulkan context instance initialized");
-    #if defined(_DEBUG)
+#if defined(_DEBUG)
     LOG_DEBUG("Enabled Vulkan Debugger");
     u32 log_level = VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT;
     VkDebugUtilsMessengerCreateInfoEXT debug_create_info = {VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT};
@@ -74,7 +75,23 @@ b8 initialize_vulkan_api(backend_context* context, const char* name, struct acti
     BILT_ASSERT_MESSAGE(func, "Failed to create debug messenger!");
     VK_CHECK(func(vk.vk_instance, &debug_create_info, vk.vk_allocator, &vk.vk_debugger));
     LOG_DEBUG("Vulkan debugger created.");
-    #endif
+#endif
+
+    // device initialization
+    LOG_DEBUG("Creating surface...");
+    if (!initialize_vulkan_surface(active_plat, &vk)) {
+        LOG_ERROR("Failed to initialize Vulkan surface.");
+        return FALSE;
+    }
+    LOG_DEBUG("Surface created...");
+    
+    LOG_DEBUG("Creating device...");
+    if (!initialize_vulkan_device(&vk)) {
+        LOG_ERROR("Failed to initialize Vulkan device.");
+        return FALSE;
+    }
+    LOG_DEBUG("Device created...");
+
     LOG_INFO("Vulkan initialized.")
     return TRUE;
 }

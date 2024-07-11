@@ -16,6 +16,10 @@
 #include <sys/time.h>
 #include <linux/time.h>
 
+#define VK_USE_PLATFORM_XCB_KHR
+#include <vulkan/vulkan.h>
+#include "renderer/vulkan/vulkan_defines.inl"
+
 // posix versions after 1993 use time.h else use unistd.h
 #if _POSIX_C_SOURCE >= 199309L
 #include <time.h>
@@ -34,6 +38,7 @@ typedef struct active_state {
     xcb_screen_t* screen;
     xcb_atom_t protocols;
     xcb_atom_t window_delete;
+    VkSurfaceKHR vk_surface;
 } active_state;
 
 keys process_code(u32 kcode);
@@ -222,6 +227,25 @@ void get_extensions(const char ***names) {
     push_array(*names, &"VK_KHR_xcb_surface");
 }
 
+b8 initialize_vulkan_surface(active_platform *active_plat, vk_context *vk) {
+    active_state *state = (active_state *)active_plat->active_state;
+    VkXcbSurfaceCreateInfoKHR surface_create_info = {VK_STRUCTURE_TYPE_XCB_SURFACE_CREATE_INFO_KHR};
+    surface_create_info.connection = state->connection;
+    surface_create_info.window = state->window;
+
+    VkResult result = vkCreateXcbSurfaceKHR(
+        vk->vk_instance,
+        &surface_create_info,
+        vk->vk_allocator,
+        &state->vk_surface);
+    if (result != VK_SUCCESS) {
+        KFATAL("Vulkan vk_surface creation failed.");
+        return FALSE;
+    }
+
+    vk->vk_surface = state->vk_surface;
+    return TRUE;
+}
 
 keys process_code(u32 kcode) {
     switch (kcode) {

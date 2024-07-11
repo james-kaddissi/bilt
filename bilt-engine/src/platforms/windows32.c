@@ -10,11 +10,16 @@
 #include <windowsx.h>
 #include <stdlib.h>
 
+#include <vulkan/vulkan.h>
+#include <vulkan/vulkan_win32.h>
+#include "renderer/vulkan/vulkan_defines.inl"
+
 LRESULT CALLBACK win_popups(HWND hwnd, u32 msg, WPARAM wparam, LPARAM lparam);
 
 typedef struct active_state {
     HINSTANCE hinstance;
     HWND hwnd;
+    VkSurfaceKHR vk_surface;
 }active_state;
 
 static f64 clock_speed;
@@ -179,6 +184,22 @@ void timed_sleep(u64 ms) {
 
 void get_extensions(const char ***names) {
     push_array(*names, &"VK_KHR_win32_surface");
+}
+
+b8 initialize_vulkan_surface(active_platform* active_plat, vk_context* vk) {
+    active_state *state = (active_state *)active_plat->active_state;
+    VkWin32SurfaceCreateInfoKHR surface_create_info = {VK_STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR};
+    surface_create_info.hinstance = state->hinstance;
+    surface_create_info.hwnd = state->hwnd;
+
+    VkResult result = vkCreateWin32SurfaceKHR(vk->vk_instance, &surface_create_info, vk->vk_allocator, &vk->vk_surface);
+    if(result != VK_SUCCESS)
+    {
+        LOG_FATAL("Failed to create vk_surface");
+        return FALSE;
+    }
+    vk->vk_surface=state->vk_surface;
+    return TRUE;
 }
 
 LRESULT CALLBACK win_popups(HWND hwnd, u32 msg, WPARAM wparam, LPARAM lparam) {
